@@ -1,0 +1,92 @@
+﻿FUNCTION "SysFC_PNIO_DIAG" : Void
+TITLE = PNIO Diagnostics
+{ S7_Optimized_Access := 'TRUE' }
+FAMILY : DIAG
+NAME : DIAG
+VERSION : 0.1
+   VAR_INPUT 
+      Start : Bool;
+   END_VAR
+
+   VAR_IN_OUT 
+      "Configured Slaves" : Array[0..1023] of Bool;
+      "Available Slaves" : Array[0..1023] of Bool;
+      "Deactivated Slaves" : Array[0..1023] of Bool;
+      "Slaves in Error State" : Array[0..1023] of Bool;
+      Active : Bool;
+      "Profinet Deviation" : Bool;
+      "Profinet Fault" : Bool;
+      "Slaves deactivated" : Int;
+      "Slaves in Error" : Int;
+      "First Slave in Error" : Int;
+      "First deactivated Slave" : Int;
+   END_VAR
+
+   VAR_TEMP 
+      t_Int : Int;
+      t_Count : Int;
+   END_VAR
+
+
+BEGIN
+	
+	// ENO FALSE
+	ENO := False;
+	
+	// Check Types
+	
+	// Init
+	#Active := False;
+	#"Profinet Deviation" := FALSE;
+	#"Profinet Fault" := False;
+	#"Slaves in Error" := 0;
+	#"Slaves deactivated" := 0;
+	#"First Slave in Error" := 0;
+	#"First deactivated Slave" := 0;
+	
+	// Check Start
+	IF #Start THEN
+	    
+	   
+	    // Loop Through Slaves
+	    FOR #t_Count:= 1 TO 1023 DO
+	        
+	        // Slave is Confiured
+	        IF #"Configured Slaves"[#t_Count] = True AND #"Deactivated Slaves"[#t_Count] = False THEN
+	            
+	            // Slave is not Connected
+	            IF NOT #"Available Slaves"[#t_Count] THEN
+	            
+	                #"Profinet Fault" := True;
+	                #"Slaves deactivated" := #"Slaves deactivated" + 1;
+	                
+	                IF #"First deactivated Slave" = 0 THEN
+	                    #"First deactivated Slave" := #t_Count;
+	                END_IF;
+	                
+	                CONTINUE;
+	                
+	            END_IF;
+	            
+	            // Slave is Faulted
+	            IF #"Slaves in Error State"[#t_Count] THEN
+	                
+	                #"Profinet Deviation" := True;
+	                #"Slaves in Error" := #"Slaves in Error" + 1;
+	                
+	                IF #"First Slave in Error" = 0 THEN
+	                    #"First Slave in Error" := #t_Count;
+	                END_IF;
+	                
+	            END_IF;
+	        END_IF;
+	    END_FOR;
+	    
+	    // Set Active
+	    #Active := True;
+	    ENO := True;
+	    
+	END_IF;
+	
+END_FUNCTION
+

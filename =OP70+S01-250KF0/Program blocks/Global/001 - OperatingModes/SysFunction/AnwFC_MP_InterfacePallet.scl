@@ -1,0 +1,78 @@
+﻿FUNCTION "AnwFC_MP_InterfacePallet" : Void
+TITLE = WT data
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : tlange
+FAMILY : HMI
+NAME : HMI
+VERSION : 1.0
+//V1. 0 Adaptation to image - ofuehrus
+   VAR_INPUT 
+      i_Pallet_available : Bool;   // WT available
+      i_Data_available : Bool;   // WT data available
+      i_with_Processing : Bool;   // BEA: with processing
+      i_Without_Processing : Bool;   // BEA: without processing
+      i_Process_OK : Bool;   // BEA: Processing OK
+      i_Process_NOK : Bool;   // BEA: Processing NOK
+      i_Pallet_Status : Int;   // Process via INT value (if -1 then via BEA)
+      MDS_Data : "typ_General";   // RFID basic data
+   END_VAR
+
+   VAR_OUTPUT 
+      o_PalletOverview : "TypeWTUebers_v2";   // Data Station overview
+   END_VAR
+
+
+BEGIN
+	REGION WT Display
+	    #o_PalletOverview.Pallet_Present := #i_Pallet_available OR #i_Data_available;
+	    #o_PalletOverview.Data_Available := #i_Data_available;
+	END_REGION
+	
+	REGION WT Daten    
+	    IF #i_Data_available THEN
+	        IF #i_Pallet_Status = -1 THEN
+	            // Status of the Process
+	            IF #i_Process_NOK THEN
+	                #o_PalletOverview.Status := 5; // BEA NOK (Red)
+	            ELSIF #i_Process_OK THEN
+	                #o_PalletOverview.Status := 4; // BEA OK (Green)
+	            ELSIF #MDS_Data."Pallet Status".Scraped THEN
+	                #o_PalletOverview.Status := 1; // Neutralized (Red)
+	            ELSIF NOT #MDS_Data."Pallet Status"."Pallet loaded" THEN
+	                #o_PalletOverview.Status := 2; // empty (Yellow) 
+	            ELSIF #i_with_Processing THEN
+	                #o_PalletOverview.Status := 3; // BEA Released (Blue)
+	            ELSIF #i_Without_Processing THEN
+	                #o_PalletOverview.Status := 2; // BEA Blocked (Yellow)
+	            ELSE
+	                #o_PalletOverview.Status := 9; // no checking (White) 
+	            END_IF;
+	        ELSE
+	            #o_PalletOverview.Status := 3;// BEA Released (Blue)
+	            IF #MDS_Data."Pallet Status".Scraped THEN
+	                #o_PalletOverview.Status := 1; // Neutralized (Red)
+	            ELSIF NOT #MDS_Data."Pallet Status"."Pallet loaded" THEN
+	                #o_PalletOverview.Status := 2; // empty (Yellow) 
+	            ELSIF #MDS_Data."Pallet Status"."Global NOK" THEN
+	                #o_PalletOverview.Status := 2; // BEA Blocked (Yellow)
+	            
+	            END_IF;
+	            
+	            ;
+	        END_IF;
+	        
+	        REGION ID
+	            #o_PalletOverview."Product Status" := #MDS_Data."HCU ID";
+	            
+	        END_REGION
+	           
+	         
+	        REGION WT Nummer and Variant           
+	            #o_PalletOverview.Pallet_Number := #MDS_Data."Pallet Number";
+	            #o_PalletOverview.Variant := #MDS_Data."Variant Number";
+	        END_REGION
+	        
+	    END_IF;
+	END_REGION
+END_FUNCTION
+

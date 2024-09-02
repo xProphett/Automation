@@ -1,0 +1,62 @@
+﻿FUNCTION "SysFC_SerialFault" : Void
+TITLE = serial error evaluation
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : OlegFuehrus
+FAMILY : DIAG
+NAME : DIAG
+VERSION : 0.1
+   VAR_INPUT 
+      i_Quit : Bool;   // Acknowledge
+   END_VAR
+
+   VAR_OUTPUT 
+      o_Fault_available : Bool;   // Serial error present
+   END_VAR
+
+   VAR_IN_OUT 
+      io_Data : Array[1..64] of "TypeSeriesError";   // Data for serial faults
+   END_VAR
+
+   VAR_TEMP 
+      t_Pointer : Int;
+   END_VAR
+
+
+BEGIN
+	REGION INIT
+	    #o_Fault_available := false;
+	    
+	END_REGION
+	
+	
+	REGION Serienfehlerauswertung
+	    FOR #t_Pointer := 1 TO 64 DO
+	        
+	        // Flankenauswertung Reset
+	        IF NOT #io_Data[#t_Pointer].BEA_NOK THEN
+	            #io_Data[#t_Pointer].HM_Flag := false;
+	        END_IF;
+	        
+	        // Fehlerzähler erhöhen
+	        IF #io_Data[#t_Pointer].BEA_NOK AND NOT #io_Data[#t_Pointer].HM_Flag AND NOT #io_Data[#t_Pointer].Error_present THEN
+	            #io_Data[#t_Pointer].ErrorCounter := #io_Data[#t_Pointer].ErrorCounter + 1;
+	            #io_Data[#t_Pointer].HM_Flag := true;
+	        END_IF;
+	        
+	        // Fehleranzahl auswerten
+	        #io_Data[#t_Pointer].Error_present := #io_Data[#t_Pointer].ErrorCounter >= #io_Data[#t_Pointer].Para_ErrorNumber;
+	        IF #io_Data[#t_Pointer].ErrorCounter >= #io_Data[#t_Pointer].Para_ErrorNumber THEN
+	            #o_Fault_available := TRUE;
+	        END_IF;
+	        
+	        // Fehleranzahl löschen
+	        IF (#i_Quit AND #io_Data[#t_Pointer].Error_present) OR
+	            (#io_Data[#t_Pointer].BEA_OK AND NOT #io_Data[#t_Pointer].BEA_NOK) THEN
+	            #io_Data[#t_Pointer].ErrorCounter := 0;
+	        END_IF;
+	        
+	    END_FOR;
+	END_REGION
+	
+END_FUNCTION
+

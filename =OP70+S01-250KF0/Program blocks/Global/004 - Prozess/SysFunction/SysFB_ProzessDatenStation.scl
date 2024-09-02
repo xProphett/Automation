@@ -1,0 +1,468 @@
+﻿FUNCTION_BLOCK "SysFB_ProzessDatenStation"
+TITLE = Evaluate process data of a group
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : VAF
+FAMILY : PROZESS
+NAME : PROZESS
+VERSION : 0.1
+   VAR_INPUT 
+      Worker_ID : DWord;   // factory identification
+   END_VAR
+
+   VAR_OUTPUT 
+      Overall_OK : Bool;
+      Overall_NOK : Bool;
+      Deselect_active : Bool;
+      Hand_OK_active : Bool;
+      NA_available : Bool;
+      NOK_available : Bool;
+   END_VAR
+
+   VAR_IN_OUT 
+      DB_Operator_Screen : "TypeProcessScreen";   // DB Worker's picture
+      T_W_NOK_fade_in : Bool := TRUE;   // Repeat button NOK Fade in
+      T_W_NOK_enable : Bool := TRUE;   // Repeat button NOK Enable
+      T_W_NOK_active : Bool;   // Repeat button NOK active
+      T_NOK_REJECT_fade_in : Bool := TRUE;   // NOK Approve Button Show
+      T_NOK_REJECT_enable : Bool := TRUE;   // NOK Approve button Enable
+      NOK_REJECT_active : Bool;   // NOK Approve Button active
+      T_SD_fade_in : Bool := TRUE;   // Show SG unlock and lock button
+      T_SD_enable : Bool := TRUE;   // Approve SG button for unBlocking and Blocking
+      CTRL_SD_unlock : Bool;   // Control SG UnBlocking
+      CTRL_SD_lock : Bool;   // Control SG Blocking
+      RM_SD_lock : Bool;   // Feedback SG Locked
+   END_VAR
+
+   VAR RETAIN
+      LBEA_finished : Bool;   // last BEA: station has worked
+      LBEA_OK : Bool;   // last BEA: station has worked OK
+      LBEA_NOK : Bool;   // last BEA: station has worked NOT OK
+      LBEA_with_deselect : Bool;   // last BEA: station has worked with deselection
+      LBEA_with_Hand_OK : Bool;   // last BEA: station worked with hand OK
+      LBEA_reserve_0_5 : Bool;   // Last BEA: Reserve
+      LBEA_reserve_0_6 : Bool;   // Last BEA: Reserve
+      LBEA_reserve_0_7 : Bool;   // Last BEA: Reserve
+      FBEA_finished : Bool;   // first BEA: station has worked
+      FBEA_OK : Bool;   // first BEA: station has worked OK
+      FBEA_NOK : Bool;   // first BEA: station has worked NOK
+      FBEA_with_deselect : Bool;   // first BEA: station has worked with deselection
+      FBEA_with_Hand_OK : Bool;   // first BEA: station has worked with hand OK
+      EBEA_reserve_0_5 : Bool;   // First BEA: Reserve
+      EBEA_reserve_0_6 : Bool;   // First BEA: Reserve
+      EBEA_reserve_0_7 : Bool;   // First BEA: Reserve
+      "Flow time" : Byte := BYTE#16#01;   // Flow meter
+      Blockcheck : Byte;
+      STAT_T_W_NOK : Struct
+         fade_in : Bool;
+         operated : Bool;
+         executable : Bool;
+         function_active : Bool;
+      END_STRUCT;
+      STAT_T_NOK_REJECT : Struct
+         fade_in : Bool;
+         operated : Bool;
+         executable : Bool;
+         function_active : Bool;
+      END_STRUCT;
+      STAT_T_SD_Unlock : Struct
+         fade_in : Bool;
+         operated : Bool;
+         executable : Bool;
+         function_active : Bool;
+      END_STRUCT;
+      STAT_T_SD_lock : Struct
+         fade_in : Bool;
+         operated : Bool;
+         executable : Bool;
+         function_active : Bool;
+      END_STRUCT;
+      "Time" : Struct
+         _RET_VAL : Int;
+         Date_Time : Date_And_Time;
+         Serial_Date_Time : Array[0..7] of Byte;
+         Serial_Pos : DInt;
+         Serial_RET_VAL : Int;
+      END_STRUCT;
+   END_VAR
+
+   VAR_TEMP 
+      t_NOK_available : Bool;
+      t_reset : Bool;
+      t_counter : Int;
+      t_counter2 : Int;
+   END_VAR
+
+
+BEGIN
+	REGION _Logbuch_
+	    
+	    // ==============================================================================+
+	    // Logbuch                                                                       +
+	    // ------------------------------------------------------------------------------+
+	    // 01.12.2017  Umstellung auf TIA                                                +
+	    //                                                                               +
+	    // ==============================================================================+
+	    
+	    
+	    // ==============================================================================+
+	    // Funktion                                                                      +
+	    // ------------------------------------------------------------------------------+
+	    // Der Baustein verwaltet 8 GRUPPEN in einem Prozessbild                         +
+	    //                                                                               +
+	    // -Es werden alle aktiven BEA durchsucht und ausgewertet: Gesamt IO             +
+	    // Gesamt NIO                                                                    +
+	    // Abwahl  vorhanden                                                             +
+	    // Hand IO vorhanden                                                             +
+	    // Nacharbeit vorhanden                                                          +
+	    // NIO vorhanden                                                                 +
+	    // -Die Funktionen "Wiederholen nach NIO", "NIO Entlassen" und "Schutztür"       +
+	    // werden Verwaltet.                                                             +
+	    // ==============================================================================+
+	    
+	    
+	    // ==============================================================================+
+	    // IN-Parameterbeschreibung                                                      +
+	    // ------------------------------------------------------------------------------+
+	    // Typ        Name              Beschreibung                                     +
+	    // ------------------------------------------------------------------------------+
+	    // DB         DB_Wekerbild      Datenbaustein Werkerbild                         +
+	    // DWORD      Werkerkennung     Werkerkennung vom E-Key                          +
+	    // ==============================================================================+
+	    
+	    
+	    // ==============================================================================+
+	    // OUT-Parameterbeschreibung                                                     +
+	    // ------------------------------------------------------------------------------+
+	    // Typ        Name              Beschreibung                                     +
+	    // ------------------------------------------------------------------------------+
+	    // BOOL       Gesamt_IO         Alle BEA sind fertig und i.O.                    +
+	    // BOOL       Gesamt_NIO        Alle BEA sind feritg und min.1x NIO vorhanden    +
+	    // BOOL       Abwahl_vorhanden  Min 1x "Abwahl" vorhanden                        +
+	    // BOOL       HIO_vorhanden     Min 1x "Hand IO" vorhanden                       +
+	    // BOOL       NA_vorhanden      Min 1x "Nacharbeit" vorhanden                    +
+	    // BOOL       NIO_vorhanden     Min 1x "NIO" vorhanden                           +
+	    // ==============================================================================+
+	    
+	    // ==============================================================================+
+	    // IN_OUT-Parameterbeschreibung                                                  +
+	    // ------------------------------------------------------------------------------+
+	    // Typ        Name              Beschreibung                                     +
+	    // ------------------------------------------------------------------------------+
+	    // BOOL       T_W_NIO_einbl     Taste "Wiederholen nach NIO" einblenden          +
+	    // BOOL       T_W_NIO_freig     Taste "Wiederholen nach NIO" freigeben           +
+	    // BOOL       T_W_NIO_aktiv     Funktion "Wiederholen nach NIO" aktiv            +
+	    // BOOL       T_NIO_ENTL_einbl  Taste "NIO Entlassen" einblenden                 +
+	    // BOOL       T_NIO_ENTL_freig  Taste "NIO Entlassen" freigeben                  +
+	    // BOOL       T_NIO_ENTL_aktiv  Funktion "NIO Entlassen" aktiv                   +
+	    // BOOL       T_SG_einbl        Taste "Schutztür" einblenden                     +
+	    // BOOL       T_SG_freig        Taste "Schutztür" freigeben                      +
+	    // BOOL       ANST_SG_entr      Ansteuerung Schutztuer entriegeln                +
+	    // BOOL       ANST_SG_verr      Ansteuerung Schutztuer verriegeln                +
+	    // BOOL       RM_SG_verr        Rueckmeldung Schutztuer verriegelt               +
+	    // ==============================================================================+
+	END_REGION
+	
+	REGION _Durchlaufzähler_
+	    
+	    #"Flow time" := 0;
+	FOR #t_counter := 0 TO 7 DO
+	    IF #"Flow time" < #DB_Operator_Screen.D.GRP[#t_counter].Continuous_Counter THEN
+	        #"Flow time" := #DB_Operator_Screen.D.GRP[#t_counter].Continuous_Counter;
+	    END_IF;
+	END_FOR;
+	
+	#t_reset := #"Flow time" = 0;
+	    
+	END_REGION
+	
+	REGION _Gruppenauswertung_
+	    
+	    // Station hat gearbeitet
+	    #LBEA_finished :=
+	    #DB_Operator_Screen.D.GRP_BUSY[0] OR
+	    #DB_Operator_Screen.D.GRP_BUSY[1] OR
+	    #DB_Operator_Screen.D.GRP_BUSY[2] OR
+	    #DB_Operator_Screen.D.GRP_BUSY[3] OR
+	    #DB_Operator_Screen.D.GRP_BUSY[4] OR
+	    #DB_Operator_Screen.D.GRP_BUSY[5] OR
+	    #DB_Operator_Screen.D.GRP_BUSY[6] OR
+	    #DB_Operator_Screen.D.GRP_BUSY[7];
+	    
+	    
+	    // Station hat i.O. gearbeitet
+	    #LBEA_OK :=
+	    (#DB_Operator_Screen.D.GRP_OK[0] OR NOT #DB_Operator_Screen.D.GRP_BUSY[0]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[1] OR NOT #DB_Operator_Screen.D.GRP_BUSY[1]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[2] OR NOT #DB_Operator_Screen.D.GRP_BUSY[2]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[3] OR NOT #DB_Operator_Screen.D.GRP_BUSY[3]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[4] OR NOT #DB_Operator_Screen.D.GRP_BUSY[4]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[5] OR NOT #DB_Operator_Screen.D.GRP_BUSY[5]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[6] OR NOT #DB_Operator_Screen.D.GRP_BUSY[6]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[7] OR NOT #DB_Operator_Screen.D.GRP_BUSY[7]) AND
+	    #LBEA_finished;
+	    
+	    // Station hat n.i.O. gearbeitet
+	    #LBEA_NOK :=
+	    (#DB_Operator_Screen.D.GRP_OK[0] OR #DB_Operator_Screen.D.GRP_NOK[0] OR NOT #DB_Operator_Screen.D.GRP_BUSY[0]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[1] OR #DB_Operator_Screen.D.GRP_NOK[1] OR NOT #DB_Operator_Screen.D.GRP_BUSY[1]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[2] OR #DB_Operator_Screen.D.GRP_NOK[2] OR NOT #DB_Operator_Screen.D.GRP_BUSY[2]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[3] OR #DB_Operator_Screen.D.GRP_NOK[3] OR NOT #DB_Operator_Screen.D.GRP_BUSY[3]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[4] OR #DB_Operator_Screen.D.GRP_NOK[4] OR NOT #DB_Operator_Screen.D.GRP_BUSY[4]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[5] OR #DB_Operator_Screen.D.GRP_NOK[5] OR NOT #DB_Operator_Screen.D.GRP_BUSY[5]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[6] OR #DB_Operator_Screen.D.GRP_NOK[6] OR NOT #DB_Operator_Screen.D.GRP_BUSY[6]) AND
+	    (#DB_Operator_Screen.D.GRP_OK[7] OR #DB_Operator_Screen.D.GRP_NOK[7] OR NOT #DB_Operator_Screen.D.GRP_BUSY[7]) AND
+	    #LBEA_finished AND NOT
+	    #LBEA_OK;
+	    
+	    // Station hat gearbeitet mit Abwahl
+	    #LBEA_with_deselect :=
+	    #DB_Operator_Screen.D.GRP_DESELECTED[0] OR
+	    #DB_Operator_Screen.D.GRP_DESELECTED[1] OR
+	    #DB_Operator_Screen.D.GRP_DESELECTED[2] OR
+	    #DB_Operator_Screen.D.GRP_DESELECTED[3] OR
+	    #DB_Operator_Screen.D.GRP_DESELECTED[4] OR
+	    #DB_Operator_Screen.D.GRP_DESELECTED[5] OR
+	    #DB_Operator_Screen.D.GRP_DESELECTED[6] OR
+	    #DB_Operator_Screen.D.GRP_DESELECTED[7] AND
+	    #LBEA_finished;
+	    
+	    // Station hat gearbeitet mit Hand i.O.
+	    #LBEA_with_Hand_OK :=
+	    #DB_Operator_Screen.D.GRP_HAND_OK[0] OR
+	    #DB_Operator_Screen.D.GRP_HAND_OK[1] OR
+	    #DB_Operator_Screen.D.GRP_HAND_OK[2] OR
+	    #DB_Operator_Screen.D.GRP_HAND_OK[3] OR
+	    #DB_Operator_Screen.D.GRP_HAND_OK[4] OR
+	    #DB_Operator_Screen.D.GRP_HAND_OK[5] OR
+	    #DB_Operator_Screen.D.GRP_HAND_OK[6] OR
+	    #DB_Operator_Screen.D.GRP_HAND_OK[7] AND
+	    #LBEA_finished;
+	    
+	    // letzte BEA -> erste BEA
+	    IF #"Flow time" = 1 THEN
+	        #FBEA_finished := #LBEA_finished;
+	        #FBEA_OK := #LBEA_OK;
+	        #FBEA_NOK := #LBEA_NOK;
+	        #FBEA_with_deselect := #LBEA_with_deselect;
+	        #FBEA_with_Hand_OK := #LBEA_with_Hand_OK;
+	    END_IF;
+	    
+	    // NIO vorhanden
+	    #t_NOK_available := FALSE;
+	    
+	    FOR #t_counter := 0 TO 7 DO
+	        FOR #t_counter2 := 0 TO 7 DO
+	            IF #DB_Operator_Screen.D.GRP[#t_counter].EZB_NOK[#t_counter2] THEN
+	                #t_NOK_available := true;
+	            END_IF;
+	        END_FOR;
+	    END_FOR;
+	    
+	        
+	    
+	 
+	END_REGION
+	
+	REGION _Wiederh nach NIO_
+	    #STAT_T_W_NOK.operated := #DB_Operator_Screen.BUTTON_REPEAT_NOK.operated;
+	    #STAT_T_W_NOK.fade_in := #T_W_NOK_fade_in;
+	    #STAT_T_W_NOK.executable := #T_W_NOK_enable AND #STAT_T_W_NOK.fade_in AND #t_NOK_available;
+	    
+	    IF #STAT_T_W_NOK.executable AND #STAT_T_W_NOK.operated THEN
+	        #STAT_T_W_NOK.function_active := true;
+	    END_IF;
+	    IF NOT #STAT_T_W_NOK.operated AND (#t_NOK_available OR #t_reset) THEN
+	        #STAT_T_W_NOK.function_active := FALSE;
+	    END_IF;
+	    
+	    #T_W_NOK_active := #STAT_T_W_NOK.function_active;
+	    
+	    #DB_Operator_Screen.BUTTON_REPEAT_NOK.fade_in := #STAT_T_W_NOK.fade_in;
+	    #DB_Operator_Screen.BUTTON_REPEAT_NOK.operated := #STAT_T_W_NOK.operated;
+	    #DB_Operator_Screen.BUTTON_REPEAT_NOK.executable := #STAT_T_W_NOK.executable;
+	    #DB_Operator_Screen.BUTTON_REPEAT_NOK.function_active := #STAT_T_W_NOK.function_active;
+	    
+	    IF #STAT_T_W_NOK.operated THEN
+	        #DB_Operator_Screen.BUTTON_REPEAT_NOK.operated := false;
+	    END_IF;
+	    
+	    // Gestaltung Taste am HMI
+	    IF #DB_Operator_Screen.BUTTON_REPEAT_NOK.function_active
+	        AND #DB_Operator_Screen.BUTTON_REPEAT_NOK.executable THEN
+	        #DB_Operator_Screen.BUTTON_REPEAT_NOK.Formation := 3;       // aktiv + ausführbar
+	    ELSIF #DB_Operator_Screen.BUTTON_REPEAT_NOK.function_active THEN
+	        #DB_Operator_Screen.BUTTON_REPEAT_NOK.Formation := 2;       // aktiv
+	    ELSIF #DB_Operator_Screen.BUTTON_REPEAT_NOK.executable THEN
+	        #DB_Operator_Screen.BUTTON_REPEAT_NOK.Formation := 1;       // ausführbar
+	    ELSE
+	        #DB_Operator_Screen.BUTTON_REPEAT_NOK.Formation := 0;       // gesperrt
+	    END_IF;
+	    
+	    
+	END_REGION
+	
+	REGION _Funktion NIO Entlassen_
+	    #STAT_T_NOK_REJECT.operated := #DB_Operator_Screen.BUTTON_NOK_RELEASE.operated;
+	    #STAT_T_NOK_REJECT.fade_in := #T_NOK_REJECT_fade_in;
+	    #STAT_T_NOK_REJECT.executable := #T_NOK_REJECT_enable AND #STAT_T_NOK_REJECT.fade_in AND #t_NOK_available;
+	    
+	    IF #STAT_T_NOK_REJECT.executable AND #STAT_T_NOK_REJECT.operated THEN
+	        #STAT_T_NOK_REJECT.function_active := true;
+	    END_IF;
+	    IF NOT #STAT_T_NOK_REJECT.operated AND NOT #t_NOK_available OR #t_reset THEN
+	        #STAT_T_NOK_REJECT.function_active := FALSE;
+	    END_IF;
+	    
+	    #NOK_REJECT_active := #STAT_T_NOK_REJECT.function_active;
+	    
+	    #DB_Operator_Screen.BUTTON_NOK_RELEASE.fade_in := #STAT_T_NOK_REJECT.fade_in;
+	    #DB_Operator_Screen.BUTTON_NOK_RELEASE.operated := #STAT_T_NOK_REJECT.operated;
+	    #DB_Operator_Screen.BUTTON_NOK_RELEASE.executable := #STAT_T_NOK_REJECT.executable;
+	    #DB_Operator_Screen.BUTTON_NOK_RELEASE.function_active := #STAT_T_NOK_REJECT.function_active;
+	    
+	    IF #STAT_T_NOK_REJECT.operated THEN
+	        #DB_Operator_Screen.BUTTON_NOK_RELEASE.operated := false;
+	    END_IF;
+	    
+	    // Gestaltung Taste am HMI
+	    IF #DB_Operator_Screen.BUTTON_NOK_RELEASE.function_active
+	        AND #DB_Operator_Screen.BUTTON_NOK_RELEASE.executable THEN
+	        #DB_Operator_Screen.BUTTON_NOK_RELEASE.Formation := 3;       // aktiv + ausführbar
+	    ELSIF #DB_Operator_Screen.BUTTON_NOK_RELEASE.function_active THEN
+	        #DB_Operator_Screen.BUTTON_NOK_RELEASE.Formation := 2;       // aktiv
+	    ELSIF #DB_Operator_Screen.BUTTON_NOK_RELEASE.executable THEN
+	        #DB_Operator_Screen.BUTTON_NOK_RELEASE.Formation := 1;       // ausführbar
+	    ELSE
+	        #DB_Operator_Screen.BUTTON_NOK_RELEASE.Formation := 0;       // gesperrt
+	    END_IF;
+	    
+	END_REGION
+	
+	REGION _SG Entriegeln_
+	    #STAT_T_SD_Unlock.operated := #DB_Operator_Screen.BUTTON_SD_OPEN.operated;
+	    #STAT_T_SD_Unlock.fade_in := #T_SD_fade_in;
+	    #STAT_T_SD_Unlock.executable := #T_SD_enable AND #STAT_T_SD_Unlock.fade_in;
+	    
+	    #CTRL_SD_unlock := #DB_Operator_Screen.BUTTON_SD_OPEN.executable AND #STAT_T_SD_Unlock.operated;
+	    
+	    #STAT_T_SD_Unlock.function_active := NOT #RM_SD_lock;
+	    
+	    #DB_Operator_Screen.BUTTON_SD_OPEN.fade_in := #STAT_T_SD_Unlock.fade_in;
+	    #DB_Operator_Screen.BUTTON_SD_OPEN.operated := #STAT_T_SD_Unlock.operated;
+	    #DB_Operator_Screen.BUTTON_SD_OPEN.executable := #STAT_T_SD_Unlock.executable;
+	    #DB_Operator_Screen.BUTTON_SD_OPEN.function_active := #STAT_T_SD_Unlock.function_active;
+	    
+	    // Gestaltung Taste am HMI
+	    IF #DB_Operator_Screen.BUTTON_SD_OPEN.function_active
+	        AND #DB_Operator_Screen.BUTTON_SD_OPEN.executable THEN
+	        #DB_Operator_Screen.BUTTON_SD_OPEN.Formation := 3;       // aktiv + ausführbar
+	    ELSIF #DB_Operator_Screen.BUTTON_SD_OPEN.function_active THEN
+	        #DB_Operator_Screen.BUTTON_SD_OPEN.Formation := 2;       // aktiv
+	    ELSIF #DB_Operator_Screen.BUTTON_SD_OPEN.executable THEN
+	        #DB_Operator_Screen.BUTTON_SD_OPEN.Formation := 1;       // ausführbar
+	    ELSE
+	        #DB_Operator_Screen.BUTTON_SD_OPEN.Formation := 0;       // gesperrt
+	    END_IF;
+	    
+	END_REGION
+	
+	REGION _SG Verriegeln_
+	    #STAT_T_SD_lock.operated := #DB_Operator_Screen.BUTTON_SD_CLOSE.operated;
+	    #STAT_T_SD_lock.fade_in := #T_SD_fade_in;
+	    #STAT_T_SD_lock.executable := #T_SD_enable AND #STAT_T_SD_lock.fade_in;
+	    
+	    #CTRL_SD_lock := #DB_Operator_Screen.BUTTON_SD_CLOSE.executable AND #STAT_T_SD_lock.operated;
+	    
+	    #STAT_T_SD_lock.function_active := #RM_SD_lock;
+	    
+	    #DB_Operator_Screen.BUTTON_SD_CLOSE.fade_in := #STAT_T_SD_lock.fade_in;
+	    #DB_Operator_Screen.BUTTON_SD_CLOSE.operated := #STAT_T_SD_lock.operated;
+	    #DB_Operator_Screen.BUTTON_SD_CLOSE.executable := #STAT_T_SD_lock.executable;
+	    #DB_Operator_Screen.BUTTON_SD_CLOSE.function_active := #STAT_T_SD_lock.function_active;
+	    
+	    // Gestaltung Taste am HMI
+	    IF #DB_Operator_Screen.BUTTON_SD_CLOSE.function_active
+	        AND #DB_Operator_Screen.BUTTON_SD_CLOSE.executable THEN
+	        #DB_Operator_Screen.BUTTON_SD_CLOSE.Formation := 3;       // aktiv + ausführbar
+	    ELSIF #DB_Operator_Screen.BUTTON_SD_CLOSE.function_active THEN
+	        #DB_Operator_Screen.BUTTON_SD_CLOSE.Formation := 2;       // aktiv
+	    ELSIF #DB_Operator_Screen.BUTTON_SD_CLOSE.executable THEN
+	        #DB_Operator_Screen.BUTTON_SD_CLOSE.Formation := 1;       // ausführbar
+	    ELSE
+	        #DB_Operator_Screen.BUTTON_SD_CLOSE.Formation := 0;       // gesperrt
+	    END_IF;
+	    
+	END_REGION
+	
+	REGION _Funktion Arbeitsanweisung_
+	   
+	    FOR #t_counter := 1 TO 16 DO
+	        #DB_Operator_Screen.WorkInstr.MP_Nr[#t_counter] := #DB_Operator_Screen.WorkInstr.Intern.Index[#t_counter]
+	        := #DB_Operator_Screen.WorkInstr.Intern.Index[#t_counter] := 0;
+	    END_FOR;
+	    #DB_Operator_Screen.WorkInstr.Intern."Pointer" := 1;
+	    
+	END_REGION
+	
+	REGION _Ausgabe_
+	    #Overall_OK := #LBEA_OK;
+	    #Overall_NOK := #LBEA_NOK;
+	    #Deselect_active := #LBEA_with_deselect;
+	    #Hand_OK_active := #LBEA_with_Hand_OK;
+	    #NA_available := #"Flow time" > 1;
+	    #NOK_available := #t_NOK_available;
+	    
+	    // Gestaltung Taste am HMI
+	    IF #Overall_NOK OR #NOK_available THEN
+	        #DB_Operator_Screen.Process.Status := 2;       // NIO
+	    ELSIF #Overall_OK THEN
+	        #DB_Operator_Screen.Process.Status := 1;       // IO
+	    ELSE
+	        #DB_Operator_Screen.Process.Status := 0;       // kein Status
+	    END_IF;
+	    
+	    
+	END_REGION
+	
+	REGION _Q-Daten Versorgen_
+	    // Statusbits Station eintragen
+	    
+	    // letzte Bearbeitung
+	    #DB_Operator_Screen.D.STATUS.LP_HAS_WORKED := #LBEA_finished;
+	    #DB_Operator_Screen.D.STATUS.LP_HAS_OK_WORKED := #LBEA_OK;
+	    #DB_Operator_Screen.D.STATUS.LP_HAS_NOK_WORKED := #LBEA_NOK;
+	    #DB_Operator_Screen.D.STATUS.LP_HAS_WORKED_WITH_DESEL := #LBEA_with_deselect;
+	    #DB_Operator_Screen.D.STATUS.LP_HAS_WORKED_WITH_HAND_OK := #LBEA_with_Hand_OK;
+	    
+	    // erste Bearbeitung
+	    #DB_Operator_Screen.D.STATUS.FP_HAS_WORKED := #FBEA_finished;
+	    #DB_Operator_Screen.D.STATUS.FP_HAS_OK_WORKED := #FBEA_OK;
+	    #DB_Operator_Screen.D.STATUS.FP_HAS_NOK_WORKED := #FBEA_NOK;
+	    #DB_Operator_Screen.D.STATUS.FP_HAS_WORKED_WITH_DESEL := #FBEA_with_deselect;
+	    #DB_Operator_Screen.D.STATUS.FP_HAS_WORKED_WITH_HAND_OK := #FBEA_with_Hand_OK;
+	    
+	    // Werkerkennung
+	    #DB_Operator_Screen.D.WORKER_ID := #Worker_ID;
+	    
+	    // Durchlaufzähler
+	    #DB_Operator_Screen.D.STATUS.PASS_COUNTER := #"Flow time";
+	
+	    
+	    // Datum / Uhrzeit eintragen
+	    #Time.Serial_Pos := 0;
+	    #Time._RET_VAL := RD_SYS_T(#Time.Date_Time);
+	    #Time.Serial_RET_VAL :=Serialize(SRC_VARIABLE:=#Time.Date_Time, DEST_ARRAY=>#Time.Serial_Date_Time, POS:=#Time.Serial_Pos);
+	    IF NOT #LBEA_OK AND NOT #LBEA_NOK THEN
+	        #DB_Operator_Screen.D.STATION_WORK_YEAR := #Time.Serial_Date_Time[0];
+	        #DB_Operator_Screen.D.STATION_WORK_MONTH := #Time.Serial_Date_Time[1];
+	        #DB_Operator_Screen.D.STATION_WORK_DAY := #Time.Serial_Date_Time[2];
+	        #DB_Operator_Screen.D.STATION_WORK_HOUR := #Time.Serial_Date_Time[3];
+	        #DB_Operator_Screen.D.STATION_WORK_MINUTE := #Time.Serial_Date_Time[4];
+	        #DB_Operator_Screen.D.STATION_WORK_SECOND := #Time.Serial_Date_Time[5];
+	    END_IF;
+	    
+	END_REGION
+	
+	
+END_FUNCTION_BLOCK
+

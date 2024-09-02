@@ -1,0 +1,1129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V17" />
+  <DocumentInfo>
+    <Created>2024-09-02T12:50:25.3528773Z</Created>
+    <ExportSetting>WithDefaults</ExportSetting>
+    <InstalledProducts>
+      <Product>
+        <DisplayName>Totally Integrated Automation Portal</DisplayName>
+        <DisplayVersion>V17</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>TIA Portal Openness</DisplayName>
+        <DisplayVersion>V17</DisplayVersion>
+      </OptionPackage>
+      <OptionPackage>
+        <DisplayName>TIA Portal Version Control Interface</DisplayName>
+        <DisplayVersion>V17</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>STEP 7 Professional</DisplayName>
+        <DisplayVersion>V17</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>STEP 7 Safety</DisplayName>
+        <DisplayVersion>V17</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>WinCC Professional</DisplayName>
+        <DisplayVersion>V17</DisplayVersion>
+      </Product>
+    </InstalledProducts>
+  </DocumentInfo>
+  <SW.Tags.PlcTagTable ID="0">
+    <AttributeList>
+      <Name>GeneralSymbols</Name>
+    </AttributeList>
+    <ObjectList>
+      <SW.Tags.PlcTag ID="1" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.2</LogicalAddress>
+          <Name>I_Circuit_breaker_24v_OK</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="2" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="3" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text>Circuit breaker 24V DC IO (+S01-100FC3/-100FC6/-100FC8)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="4" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="5" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Leitungsschutzschalter 24V DC IO (+S01-100FC3/-100FC6/-100FC8)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="6" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.3</LogicalAddress>
+          <Name>I_Circuit_breaker_230v_OK</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="7" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="8" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text>Circuit breaker 230V DC IO (+S01-33FC01, 33FCB4, 33FB06/-44FC3/-44FC1)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="9" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="A" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Leitungsschutzschalter 230V AC IO (+S01-33FC01, 33FCB4, 33FB06/-44FC3/-44FC1)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="B" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.4</LogicalAddress>
+          <Name>I_Circuit_breaker_400v_OK</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="C" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="D" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text>Circuit breaker 400V DC IO (+S01-30QB7/-50QB8)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="E" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="F" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Leistungsschutzschalter 400V IO (+S01-30QB7/-50QB8)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="10" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.5</LogicalAddress>
+          <Name>I_Scalance_OK</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="11" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="12" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text>Scalance PN And ETH IO (+S01--275XF1)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="13" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="14" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Scalance PN und ETH IO (+S01-275XF1)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="15" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.7</LogicalAddress>
+          <Name>I_Cabinet_temperatur_OK</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="16" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="17" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="18" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="19" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Schaltschranktemperatur IO (+S01-- 300BT0.7)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="1A" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I0.1</LogicalAddress>
+          <Name>I_Controle_voltage_OK</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="1B" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="1C" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="1D" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="1E" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Steuerspannung eingeschaltet (+S01-KF0)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="1F" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I1.2</LogicalAddress>
+          <Name>I_Safety_door_closed_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="20" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="21" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="22" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="23" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="24" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I1.3</LogicalAddress>
+          <Name>I_Safety_door_locked_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="25" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="26" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="27" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="28" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="29" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I2.1</LogicalAddress>
+          <Name>I_Button_Control_OFF</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="2A" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="2B" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="2C" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="2D" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Taster NO Maschine aus  (+ZP01-302SF2.1)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="2E" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I2.0</LogicalAddress>
+          <Name>I_Button_Control_ON</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="2F" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="30" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="31" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="32" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Taster NO Maschine ein (+ZP01-302SF2.0)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="33" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I2.2</LogicalAddress>
+          <Name>I_Button_end_of_cycle_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="34" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="35" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="36" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="37" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Taster NO Halt bei Taktende  (+ZP01-302SF2.2)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="38" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I2.3</LogicalAddress>
+          <Name>I_Button_home_positioni_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="39" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="3A" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="3B" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="3C" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Taster NO Grundstellungsfahrt (+ZP02-302SF2.4) </Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="3D" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I2.4</LogicalAddress>
+          <Name>I_Button_fault_ack_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="3E" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="3F" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="40" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="41" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Taster NO Störung Quittieren (+ZP01-302SF2.4) </Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="42" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I3.0</LogicalAddress>
+          <Name>I_Vacuum_Gripper_Pressure_Ok</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="43" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="44" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="45" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="46" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Taster NO Grundstellungsfahrt(+ZP01-302SF2.3) </Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="47" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I3.4</LogicalAddress>
+          <Name>I_Feedback_circuit_enabling_safety</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="48" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="49" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="4A" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="4B" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Rückführkreis Sicherheit Station </Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="4C" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I30.2</LogicalAddress>
+          <Name>I_Protective_door_OP70_K1</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="4D" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="4E" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="4F" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="50" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Schutztür 1 Kanal 1 (+S01-SF30.2)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="51" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I30.6</LogicalAddress>
+          <Name>I_Protective_door_OP70_K2</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="52" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="53" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="54" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="55" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Schutztür 1 Kanal 2 (+S01-SF30.6)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="56" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I30.0</LogicalAddress>
+          <Name>I_Safety_E-stop_OP70_K1</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="57" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="58" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="59" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="5A" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Safety Not-Halt Kanal 1 (+ZP01-302SF30.0) </Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="5B" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I30.4</LogicalAddress>
+          <Name>I_Safety_E-stop_OP70_K2</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="5C" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="5D" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="5E" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="5F" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Safety Not-Halt Kanal 2 (+ZP01-302SF30.4) </Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="60" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q0.1</LogicalAddress>
+          <Name>Q_Control_voltage_ON</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="61" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="62" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="63" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="64" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Steuerspannung einschalten (+S01-600KF0.1)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="65" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q0.4</LogicalAddress>
+          <Name>Q_Stop_at_cycle_end_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="66" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="67" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="68" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="69" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Meldeleuchte Halt bei Taktende (+ZP01-600PF0.4)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="6A" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q0.5</LogicalAddress>
+          <Name>Q_Start_home_pos_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="6B" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="6C" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="6D" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="6E" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Meldeleuchte Grundstellung Anfahren/Erreicht (+ZP01-600PF0.5)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="6F" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q1.1</LogicalAddress>
+          <Name>Q_warning_in_Station_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="70" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="71" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="72" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="73" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Signalsäule Vorwarnung (+M01-611PF3.0)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="74" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q1.2</LogicalAddress>
+          <Name>Q_fault_in_Station_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="75" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="76" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="77" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="78" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Signalsäule Störung (+M01-611PF3.0)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="79" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q1.0</LogicalAddress>
+          <Name>Q_Station_in_automatic_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="7A" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="7B" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="7C" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="7D" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>Signalsäule Verketter Betrieb(+M01-611PF3.0)</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="7E" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q3.0</LogicalAddress>
+          <Name>Q_Protective_door_locking_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="7F" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="80" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="81" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="82" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="83" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q2.4</LogicalAddress>
+          <Name>Q_ScrewDriver_ON</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="84" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="85" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="86" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="87" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="88" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q36.0</LogicalAddress>
+          <Name>QF_Enable_Safety_Station</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="89" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="8A" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="8B" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="8C" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="8D" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q50.1</LogicalAddress>
+          <Name>Q_Air_Supply_Central_ON</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="8E" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="8F" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="90" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="91" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="92" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>"LTLL_typeEksInterface"</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%I7000.0</LogicalAddress>
+          <Name>IEKS_OP70</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="93" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="94" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text>EKS at the control panel</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="95" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="96" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text>EKS am Bedienpult</Text>
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="97" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q2.7</LogicalAddress>
+          <Name>Q_Air_Supply_Vacumm_Gripper_ON</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="98" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="99" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="9A" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="9B" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+      <SW.Tags.PlcTag ID="9C" CompositionName="Tags">
+        <AttributeList>
+          <DataTypeName>Bool</DataTypeName>
+          <ExternalAccessible>true</ExternalAccessible>
+          <ExternalVisible>true</ExternalVisible>
+          <ExternalWritable>true</ExternalWritable>
+          <LogicalAddress>%Q3.3</LogicalAddress>
+          <Name>Q_Door_Restart</Name>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="9D" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="9E" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="9F" CompositionName="Items">
+                <AttributeList>
+                  <Culture>nl-BE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="A0" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Tags.PlcTag>
+    </ObjectList>
+  </SW.Tags.PlcTagTable>
+</Document>

@@ -1,0 +1,156 @@
+﻿FUNCTION_BLOCK "HLP_FIFO"
+TITLE = FIFO
+{ S7_Optimized_Access := 'TRUE' }
+AUTHOR : OlegFuehrus
+FAMILY : HLP
+NAME : HLP
+VERSION : 1.0
+   VAR_INPUT 
+      request : Bool;   // The instruction is executed if a positive signal edge is detected at the ";request"; parameter.
+      mode : Bool;   // 0 = Return the first entry from the cyclic buffer
+      initialValue : Variant;   // Value with which the ARRAY of the ring buffer is initialized.
+   END_VAR
+
+   VAR_OUTPUT 
+      error : Int;   // Error information
+   END_VAR
+
+   VAR_IN_OUT 
+      item : Variant;   // The entry that is either returned from the ring buffer or written to the ring buffer.
+      buffer : Variant;   // An ARRAY used as a ring buffer.
+   END_VAR
+
+   VAR 
+      edgeupm : Bool;   // Edge flag in which the VKE of the previous query is stored.
+      firstItemIndex : Int;   // Index of the oldest entry in the ring buffer
+      nextEmptyItemIndex : Int;   // Index of the next free element in the ring buffer
+   END_VAR
+
+   VAR_TEMP 
+      edgeup : Bool;   // Result of edge evaluation
+      internalError : Int;   // Error information
+      newFirstItemIndex : Int;   // Variable Index
+      newNextEmptyItemIndex : Int;   // Variable Index
+      bufferSize : UDInt;   // Number of ARRAY elements in the ring buffer
+   END_VAR
+
+
+BEGIN
+	(* Dieser Programmcodeabschnitt wird nur einmalig nach einer positiven Signalflanke, ausgeführt. 
+	Wenn keine Änderung im Signalzustand des Verknüpfungsergebnisses vorliegt, dann wird die Programmbearbeitung des FB "FIFOQueue" beendet. *)
+	#edgeup := #request & NOT #edgeupm;
+	#edgeupm := #request;
+	IF NOT (#edgeup) THEN
+	    RETURN;
+	END_IF;
+	// ------Validierung, ob alle Parametereingänge gültig sind.----
+	(* Dieser Programmcodeabschnitt überprüft, ob der Ring-Puffer ein ARRAY ist. Wenn ja, dann wird die Zahl der ARRAY-Elemente ausgelesen. 
+	Wenn es sich nicht um ein ARRAY handelt, dann wird die Programmbearbeitung an dieser Stelle beendet und der Fehlercode "-10" ausgegeben. *)
+	IF NOT (IS_ARRAY(#buffer)) THEN
+	    #error := -10;
+	    RETURN;
+	ELSE
+	    #bufferSize := CountOfElements(#buffer);
+	END_IF;
+	(* Dieser Programmcodeabschnitt überprüft, ob der Datentyp der ARRAY-Elemente mit dem Datentyp des Eintrags (Variable #item) übereinstimmt. 
+	Wenn die Datentypen nicht übereinstimmen, dann wird die Programmbearbeitung an dieser Stelle beendet und der Fehlercode "-11" ausgegeben. *)
+	IF NOT (TypeOf(#item) = TypeOfElements(#buffer)) THEN
+	    #error := -11;
+	    RETURN;
+	END_IF;
+	(* Dieser Programmcodeabschnitt überprüft, ob der Initial-Wert des Ring-Puffers mit dem Eintrag (Variable #item) übereinstimmt. 
+	Wenn die Datentypen nicht übereinstimmen, dann wird die Programmbearbeitung an dieser Stelle beendet und der Fehlercode "-12" ausgegeben. *)
+	IF NOT (TypeOf(#item) = TypeOf(#initialValue)) THEN
+	    #error := -12;
+	    RETURN;
+	END_IF;
+	(* Dieser Programmcodeabschnitt überprüft, ob die variablen Indices innerhalb der ARRAY-Grenzen liegen. 
+	Wenn das nicht der Fall ist, dann wird die Programmbearbeitung an dieser Stelle beendet und je nach Index die Fehlercodes "-20" oder "-21" ausgegeben. *)
+	IF (#nextEmptyItemIndex >= #bufferSize) THEN
+	    #error := -20;
+	    RETURN;
+	END_IF;
+	IF (#firstItemIndex >= #bufferSize) THEN 
+	    #error := -21;
+	    RETURN;
+	END_IF;
+	//-----------Programmcodeausführung, abhängig vom Parameter Mode-------------
+	// Die Ausführung der Anweisungen hängt vom Signalzustand des Parameters Mode ab.
+	IF #mode = 0 THEN
+	// Wenn der Parameter Mode den Signalzustand "0" hat, dann wird der erste Eintrag aus dem übergegebenen Ring-Puffer zurückgegeben.
+	(* Dieser Programmcodeabschnitt überprüft, ob der Ring-Puffer leer ist. Wenn das der Fall ist, 
+	dann wird die Programmbearbeitung an dieser Stelle beendet und der Fehlercode "-40" ausgegeben. *)
+	
+	    IF (#firstItemIndex = -1) THEN
+	        #error := -40;
+	        RETURN;
+	    END_IF;
+	    // Dieser Programmcodeabschnitt gibt den ersten Eintrag des Ring-Puffers zurück.
+	
+	    #internalError := MOVE_BLK_VARIANT(SRC := #buffer,
+	                                       COUNT := 1,
+	                                       SRC_INDEX := #firstItemIndex,
+	                                       DEST_INDEX := 0,
+	                                       DEST => #item);
+	    
+	    IF (#internalError = 0) THEN
+	(* Dieser Programmcodeabschnitt überprüft, ob der Ring-Puffer ARRAY-Elemente enthält. 
+	Wenn ja, dann wird der erste Eintrag weitergeschoben und der Index um 1 erhöht. *)
+	
+	    #internalError := MOVE_BLK_VARIANT(SRC := #initialValue,
+	                                       COUNT := 1,
+	                                       SRC_INDEX := 0,
+	                                       DEST_INDEX := #firstItemIndex,
+	                                       DEST => #buffer);
+	        // Dieser Programmcodeabschnitt berechnet den neuen Index des ersten Eintrags.
+	        #newFirstItemIndex := #firstItemIndex + 1;
+	        #newFirstItemIndex := #newFirstItemIndex MOD UDINT_TO_INT(#bufferSize);
+	        // Dieser Programmabschnitt überprüft, ob der Ring-Puffer leer ist.
+	        IF (#nextEmptyItemIndex = #newFirstItemIndex) THEN
+	            // Wenn der Ring-Puffer leer ist, dann wird der Index auf 0 gesetzt.
+	            #firstItemIndex := -1;
+	            #nextEmptyItemIndex := 0;
+	        ELSE
+	            // Der Index des ersten Eintrags wird geändert.
+	            #firstItemIndex := #newFirstItemIndex;
+	        END_IF;
+	    END_IF;
+	ELSE
+	    // Wenn der Parameter Mode den Signalzustand "1" hat, dann wird der Eintrag in den übergegebenen Ring-Puffer geschrieben.
+	(* Dieser Programmcodeabschnitt überprüft, ob der Ring-Puffer voll ist. Wenn das der Fall ist, 
+	dann wird die Programmbearbeitung an dieser Stelle beendet und der Fehlercode "-50" ausgegeben. *)
+	    IF (#nextEmptyItemIndex = #firstItemIndex) THEN
+	        #error := -50;
+	        RETURN;
+	    END_IF;
+	    // Dieser Programmcodeabschnitt schreibt den Eintrag in den Ring-Puffer.
+	    #internalError := MOVE_BLK_VARIANT(SRC := #item,
+	                                       COUNT := 1,
+	                                       SRC_INDEX := 0,
+	                                       DEST_INDEX := #nextEmptyItemIndex,
+	                                       DEST => #buffer);
+	
+	    IF (#internalError = 0) THEN
+	        // Dieser Programmcodeabschnitt erhöht den Index um 1 und berechnet den neuen leeren Eintrag-Index.
+	        #newNextEmptyItemIndex := #nextEmptyItemIndex + 1;
+	        #newNextEmptyItemIndex := #newNextEmptyItemIndex MOD UDINT_TO_INT (#bufferSize);
+	        #nextEmptyItemIndex := #newNextEmptyItemIndex;
+	        (* Dieser Programmcodeabschnitt prüft, welchen Index die Variable "#firstItemIndex" hat. Wenn die Zahl = -1 ist, 
+	        dann wurde der Ring-Puffer initialisiert und der Eintrag wird in den Ring-Puffer geschrieben. Daher muss der Variable "0" zugewiesen werden. *)
+	        IF (#firstItemIndex = -1) THEN
+	            #firstItemIndex := 0;
+	        END_IF;
+	    END_IF;
+	END_IF;
+	//-------------------------Lokale Fehlerbehandlung----------------------------
+	(* Dieser Programmcodeabschnitt überprüft, ob ein lokaler Fehler aufgetreten ist. Wenn das der Fall ist, 
+	dann wird das Programm an dieser Stelle beendet und der Fehlercode "-100" ausgegeben. *)
+	IF (#internalError > 0) THEN
+	    #error := -100;
+	    RETURN;
+	END_IF;
+	// Wenn kein Fehler während der Programmbearbeitung aufgetreten ist, dann wird der Fehlercode "0" ausgegeben.
+	#error := 0;
+	
+END_FUNCTION_BLOCK
+
